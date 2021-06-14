@@ -22,18 +22,14 @@ final class CustomProfileCell: UITableViewCell {
 		return imageView
 	}()
 
-	lazy var levelView: UIView = {
-		let view = UIView()
-		view.backgroundColor = .systemGreen
-		view.translatesAutoresizingMaskIntoConstraints = false
-
-		return view
-	}()
-
-	lazy var shadowForLevelView: UIView = {
-
-		let view = UIView()
-		view.backgroundColor = .systemGray
+	lazy var levelView: UIProgressView = {
+		let view = UIProgressView()
+		view.progressTintColor = .systemGreen
+		view.trackTintColor = .systemGray
+		view.layer.cornerRadius = 22
+		view.clipsToBounds = true
+		view.layer.sublayers?[1].cornerRadius = 22
+		view.subviews[1].clipsToBounds = true
 		view.translatesAutoresizingMaskIntoConstraints = false
 		return view
 	}()
@@ -43,6 +39,7 @@ final class CustomProfileCell: UITableViewCell {
 		label.textColor = .white
 		label.text = "staff"
 		let view = UIView()
+		view.layer.cornerRadius = 12
 		view.backgroundColor = .systemGreen
 		view.translatesAutoresizingMaskIntoConstraints = false
 		view.addSubview(label)
@@ -54,7 +51,8 @@ final class CustomProfileCell: UITableViewCell {
 
 	var profileNameLabel: UILabel = {
 		let label = UILabel()
-		label.font = .systemFont(ofSize: 28)
+		label.font = UIFont(name: "Futura-Medium", size: 24)
+
 		label.textAlignment = .left
 		label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -63,7 +61,7 @@ final class CustomProfileCell: UITableViewCell {
 
 	var walletLabel: UILabel = {
 		let label = UILabel()
-		label.font = .systemFont(ofSize: 20)
+		label.font = UIFont(name: "Futura-Medium", size: 16)
 		label.textAlignment = .left
 
 		label.translatesAutoresizingMaskIntoConstraints = false
@@ -73,7 +71,7 @@ final class CustomProfileCell: UITableViewCell {
 
 	var evaluationPointsLabel: UILabel = {
 		let label = UILabel()
-		label.font = .systemFont(ofSize: 20)
+		label.font = UIFont(name: "Futura-Medium", size: 16)
 		label.textAlignment = .left
 		label.translatesAutoresizingMaskIntoConstraints = false
 
@@ -88,6 +86,7 @@ final class CustomProfileCell: UITableViewCell {
 		addSubview(profileNameLabel)
 		addSubview(walletLabel)
 		addSubview(evaluationPointsLabel)
+		
 
 	}
 
@@ -115,39 +114,19 @@ final class CustomProfileCell: UITableViewCell {
 		levelLabel.textColor = .white
 		self.level = level
 		self.isStaff = who
+		if isStaff {
+			addSubview(staffLableView)
+		}
 		addLevelView()
 	}
 
 	func addLevelView() {
-		levelView.removeFromSuperview()
-		levelLabel.removeFromSuperview()
-		willRemoveSubview(shadowForLevelView)
-
-		shadowForLevelView.layer.cornerRadius = shadowForLevelView.frame.width / 25
-		levelView.layer.cornerRadius = levelView.frame.width / 25
-		staffLableView.layer.cornerRadius = staffLableView.frame.width / 25
-
+		let levelFraction: Float = Float(level) - Float(Int(level))
+		levelView.setProgress(levelFraction, animated: true)
+		addSubview(levelView)
 		levelLabel.translatesAutoresizingMaskIntoConstraints = false
-		shadowForLevelView.addSubview(levelView)
-		shadowForLevelView.addSubview(levelLabel)
-		let width: CGFloat = CGFloat(level.truncatingRemainder(dividingBy: 1)) * CGFloat(self.bounds.width - 32)
-		levelView.leadingAnchor.constraint(equalTo: shadowForLevelView.leadingAnchor).isActive = true
-		levelView.widthAnchor.constraint(equalToConstant: width).isActive = true
-		levelView.heightAnchor.constraint(equalTo: shadowForLevelView.heightAnchor).isActive = true
-
-		levelLabel.centerXAnchor.constraint(equalTo: shadowForLevelView.centerXAnchor).isActive = true
-		levelLabel.centerYAnchor.constraint(equalTo: shadowForLevelView.centerYAnchor).isActive = true
-		addSubview(shadowForLevelView)
-		if isStaff {
-			addSubview(staffLableView)
-		}
+		levelView.addSubview(levelLabel)
 		setupConstraints()
-		layoutIfNeeded()
-	}
-
-	override func layoutSubviews() {
-		super.layoutSubviews()
-		addLevelView()
 	}
 
 	private func setupConstraints() {
@@ -158,10 +137,13 @@ final class CustomProfileCell: UITableViewCell {
 			profileImageView.heightAnchor.constraint(equalToConstant: 164),
 			profileImageView.widthAnchor.constraint(equalToConstant: 164),
 
-			shadowForLevelView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-			shadowForLevelView.widthAnchor.constraint(equalToConstant: self.bounds.width - 32),
-			shadowForLevelView.heightAnchor.constraint(equalToConstant: 44),
-			shadowForLevelView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 24),
+			levelView.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+			levelView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+			levelView.heightAnchor.constraint(equalToConstant: 44),
+			levelView.topAnchor.constraint(equalTo: profileImageView.bottomAnchor, constant: 24),
+
+			levelLabel.centerXAnchor.constraint(equalTo: levelView.centerXAnchor),
+			levelLabel.centerYAnchor.constraint(equalTo: levelView.centerYAnchor),
 
 			profileNameLabel.leadingAnchor.constraint(equalTo: profileImageView.trailingAnchor, constant: 16),
 			profileNameLabel.topAnchor.constraint(equalTo: topAnchor, constant: 16),

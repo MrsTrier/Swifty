@@ -93,21 +93,3 @@ extension UILabel {
 		self.textAlignment = alignment
 	}
 }
-
-extension UIButton {
-
-	func addRightImage(image: UIImage?,
-					   side: CGFloat,
-					   offset: CGFloat) {
-
-		let imageView = UIImageView(image: image)
-		addSubview(imageView)
-
-		NSLayoutConstraint.activate([
-			imageView.widthAnchor.constraint(equalToConstant: side),
-			imageView.heightAnchor.constraint(equalToConstant: side),
-			imageView.trailingAnchor.constraint(equalTo: trailingAnchor, constant: offset),
-			imageView.centerYAnchor.constraint(equalTo: centerYAnchor)
-		])
-	}
-}

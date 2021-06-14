@@ -14,13 +14,13 @@ class CustomProjectTableViewCell: UITableViewCell {
 
 	private let projectName: UILabel = {
 		let label = UILabel()
-		label.font = .systemFont(ofSize: 16)
+		label.font = UIFont(name: "Futura-Medium", size: 15)
 		return label
 	}()
 
 	private let projectScore: UILabel = {
 		let label = UILabel()
-		label.font = .systemFont(ofSize: 16)
+		label.font = UIFont(name: "Futura-Bold", size: 14)
 		return label
 	}()
 
@@ -81,6 +81,6 @@ class CustomProjectTableViewCell: UITableViewCell {
 			projectName.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 8)
 
 		])
-		
+
 	}
 }

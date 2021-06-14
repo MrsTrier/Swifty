@@ -14,13 +14,13 @@ class CustomSkillTableViewCell: UITableViewCell {
 
 	private let skillName: UILabel = {
 		let label = UILabel()
-		label.font = .systemFont(ofSize: 20)
+		label.font = UIFont(name: "Futura-Medium", size: 15)
 		return label
 	}()
 
 	private let skillLevel: UILabel = {
 		let label = UILabel()
-		label.font = .systemFont(ofSize: 20)
+		label.font = UIFont(name: "Futura-Bold", size: 14)
 		return label
 	}()
 

@@ -13,6 +13,7 @@ import AuthenticationServices
 struct Errors {
 	static let connectionError = "Ops... Seems like you have problems with network connection"
 	static let nickNameError = "Ops... Seems like you entered unexpected nickname"
+	static let noNickNameError = "Ops... Seems like you have not entered any nickname"
 	static let unknownError = "Ops... Seems like something went wrong"
  }
 
@@ -43,10 +44,11 @@ class SearchViewController: UIViewController, UINavigationBarDelegate {
 	}
 
 	override func viewDidLoad() {
-//        getUserButton.layer.cornerRadius = getUserButton.frame.height / 2
 		super.viewDidLoad()
+		let searchView = self.view as! SearchView
+		searchView.toggleActivityIndicator(on: true)
 		NetworkService.shared.postRequestToken() { (responce) in
-//			searchView.toggleActivityIndicator(on: false)
+			searchView.toggleActivityIndicator(on: false)
 			if responce == nil {
 				self.showErorr(title: Errors.connectionError,
 							   message: "Please check your connection and try again")
@@ -66,9 +68,13 @@ extension SearchViewController: SearchViewDelegate {
 
 	func letsGoButtonTapped(peerName: String) {
 		let searchView = self.view as! SearchView
-//		guard let userName = userName, !userName.isEmpty else { return }
+		if peerName.isEmpty {
+			self.showErorr(title: Errors.noNickNameError ,
+						   message: "Please enter name and try again")
+			return
+		}
 		searchView.toggleActivityIndicator(on: true)
-		NetworkService.shared.getData(peerName: peerName) { (responce, error) in
+		NetworkService.shared.getData(peerName: peerName.lowercased()) { (responce, error) in
 			searchView.toggleActivityIndicator(on: false)
 			if responce == nil {
 				if error?.localizedDescription == "The data couldn’t be read because it is missing." {
